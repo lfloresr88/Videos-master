@@ -1,0 +1,399 @@
+<title>48 Leyes en GSAP</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+  /* Layout: a fixed 960x540 stage (nine scenes on one timeline) scaled to the page, with a plugin index below. */
+  :root {
+    --page: #f3f1ec;
+    --ink: #1a1613;
+    --muted: #675f55;
+    --line: #d8d2c7;
+    --chip: #e9e5dc;
+    --gold: #d4a537;
+    --crimson: #b4232c;
+    --stage: #0d0c0b;
+    --ivory: #efe8d8;
+    --dim: #8a8272;
+    --display: "Anton", Impact, "Arial Narrow Bold", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --page: #0b0a09; --ink: #efe8d8; --muted: #a0978a; --line: #2b2622; --chip: #1a1714; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --page: #0b0a09; --ink: #efe8d8; --muted: #a0978a; --line: #2b2622; --chip: #1a1714; color-scheme: dark; }
+  body {
+    background: var(--page); color: var(--ink); font-family: var(--mono); font-size: 14px;
+    padding-block: 24px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  main { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 5vw, 2.4rem); letter-spacing: 0.01em; text-wrap: balance; }
+  .sub { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; max-width: 66ch; }
+
+  #wrap { width: 100%; position: relative; border-radius: 10px; overflow: hidden; background: var(--stage); }
+  #stage { width: 960px; height: 540px; position: absolute; left: 0; top: 0; transform-origin: 0 0; overflow: hidden; background: var(--stage); color: var(--ivory); }
+  #stage::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px); background-size: 60px 60px; }
+
+  .sc { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 70px 60px 50px; gap: 14px; }
+  .desc { font-size: 18px; line-height: 1.5; color: var(--dim); max-width: 640px; margin: 0; }
+  .ttl { font-family: var(--display); font-weight: 400; margin: 0; line-height: 1.02; letter-spacing: 0.01em; }
+
+  #hud { position: absolute; left: 0; right: 0; top: 0; padding: 20px 28px; display: flex; justify-content: space-between; z-index: 5; pointer-events: none; }
+  #lawno { color: var(--gold); font-weight: 600; letter-spacing: 0.2em; font-size: 15px; }
+  #plug { background: var(--gold); color: var(--stage); font-weight: 600; font-size: 14px; padding: 5px 12px; border-radius: 4px; }
+  #bar { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #2a2622; z-index: 5; }
+  #bar i { display: block; height: 100%; background: var(--gold); transform-origin: 0 50%; transform: scaleX(0); }
+
+  /* A */ #n48 { font-family: var(--display); font-size: 270px; line-height: 0.9; color: var(--gold); }
+  #tA { font-size: 74px; }
+  /* B */ .scr { font-size: 88px; }
+  #eye { width: 150px; height: 75px; }
+  /* C */ #tC { font-size: 86px; max-width: 800px; }
+  #tC .w { display: inline-block; }
+  #spot { position: absolute; left: 130px; top: -80px; width: 700px; height: 700px; background: radial-gradient(circle, #d4a53744, transparent 62%); }
+  /* D */ #board { display: grid; grid-template-columns: repeat(8, 56px); grid-auto-rows: 56px; margin-top: 10px; }
+  #board i { display: block; }
+  #totD { position: absolute; left: 0; right: 0; top: 215px; font-size: 130px; color: var(--crimson); }
+  #flashD { position: absolute; inset: 0; background: var(--crimson); opacity: 0; }
+  #tD { font-size: 66px; }
+  /* E */ #shapeSvg { width: 230px; height: 230px; }
+  #tE { font-size: 76px; }
+  /* F */ #sF { align-items: flex-start; justify-content: flex-start; text-align: left; }
+  #svgF { position: absolute; inset: 0; width: 960px; height: 540px; }
+  #tF { font-size: 56px; position: relative; }
+  #sF .desc { position: relative; }
+  /* G */ #cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 720px; height: 270px; align-content: start; position: relative; }
+  .card { position: relative; height: 104px; border: 2px solid #4a4235; background: #1a1816; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 36px; letter-spacing: 0.04em; overflow: hidden; }
+  .card .glow { position: absolute; inset: 0; background: #d4a53755; opacity: 0; }
+  .card .lbl { position: relative; }
+  #cards.final { grid-template-columns: repeat(5, 1fr); }
+  #cards.final .card { height: 60px; font-size: 20px; opacity: 0.5; }
+  #cards.final .card.pick { grid-column: 1 / -1; order: -1; height: 190px; font-size: 100px; background: var(--crimson); border-color: #ff6a6a; opacity: 1; }
+  #tG { font-size: 60px; }
+  /* H */ #tH { font-size: 108px; filter: url(#melt); }
+  /* I */ #tI { font-size: 64px; }
+  #pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 780px; }
+  #pills span { border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 3px; font-size: 14px; }
+
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  button { font: inherit; font-weight: 600; color: var(--stage); background: var(--gold); border: 0; border-radius: 6px; padding: 9px 16px; cursor: pointer; }
+  button.ghost { background: var(--chip); color: var(--ink); }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  #scrub { flex: 1 1 200px; min-width: 0; accent-color: var(--gold); }
+  #time { font-variant-numeric: tabular-nums; color: var(--muted); min-width: 10ch; text-align: right; }
+  #index { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px; }
+  #index button { width: 100%; text-align: left; background: var(--chip); color: var(--ink); font-weight: 400; display: grid; grid-template-columns: 5.2ch 1fr; gap: 4px 12px; align-items: baseline; padding: 10px 12px; }
+  #index .t { color: var(--muted); font-variant-numeric: tabular-nums; grid-row: span 2; }
+  #index b { font-weight: 600; }
+  #index small { color: var(--muted); font-size: 12px; line-height: 1.45; }
+  .more { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.6; max-width: 80ch; }
+  .more b { color: var(--ink); font-weight: 600; }
+</style>
+
+<main>
+  <header>
+    <h1>48 Leyes en GSAP</h1>
+    <p class="sub">Siete leyes de Robert Greene, cada una animada con una herramienta distinta de GSAP. Todo corre en una sola línea de tiempo de 40 segundos. Pulsa una escena para saltar a ella.</p>
+  </header>
+
+  <div id="wrap" role="img" aria-label="Animación de 40 segundos sobre las 48 leyes del poder, hecha con GSAP">
+    <div id="stage">
+      <div id="hud"><div id="lawno">LEY 00</div><div id="plug">gsap.to</div></div>
+
+      <section class="sc" id="sA">
+        <div id="n48">0</div>
+        <h2 class="ttl" id="tA">LEYES DEL PODER</h2>
+        <p class="desc" id="dA">según Robert Greene</p>
+      </section>
+
+      <section class="sc" id="sB">
+        <svg id="eye" viewBox="0 0 200 100" aria-hidden="true">
+          <g id="eyeg">
+            <path d="M10 50 Q100 -12 190 50 Q100 112 10 50 Z" fill="none" stroke="#d4a537" stroke-width="5" stroke-linejoin="round"/>
+            <circle id="pupil" cx="100" cy="50" r="19" fill="#d4a537"/>
+            <circle cx="100" cy="50" r="7" fill="#0d0c0b"/>
+          </g>
+        </svg>
+        <div class="ttl scr" id="b1">QZXKJ WPVB</div>
+        <div class="ttl scr" id="b2">MFQLRZSDLQEP</div>
+        <p class="desc" id="dB">Nunca reveles el propósito real de tus movimientos.</p>
+      </section>
+
+      <section class="sc" id="sC">
+        <div id="spot"></div>
+        <h2 class="ttl" id="tC">ATRAE LA ATENCIÓN A TODA COSTA</h2>
+        <p class="desc" id="dC">Lo que no se ve, no existe. Hazte notar.</p>
+      </section>
+
+      <section class="sc" id="sD">
+        <h2 class="ttl" id="tD">APLASTA AL ENEMIGO</h2>
+        <div id="board"></div>
+        <div class="ttl" id="totD">TOTALMENTE</div>
+        <p class="desc" id="dD">No dejes brasas: elimina toda posibilidad de revancha.</p>
+        <div id="flashD"></div>
+      </section>
+
+      <section class="sc" id="sE">
+        <h2 class="ttl" id="tE">REINVÉNTATE</h2>
+        <svg id="shapeSvg" viewBox="0 0 200 200" aria-hidden="true">
+          <path id="shape" fill="#d4a537" d="M100 20 C144 20 180 56 180 100 C180 144 144 180 100 180 C56 180 20 144 20 100 C20 56 56 20 100 20 Z"/>
+          <g opacity="0">
+            <path id="m2" d="M100 15 L180 100 L100 185 L20 100 Z"/>
+            <path id="m3" d="M100 15 L121 72 L182 75 L134 113 L151 172 L100 139 L49 172 L66 113 L18 75 L79 72 Z"/>
+            <path id="m4" d="M25 160 L25 70 L65 105 L100 45 L135 105 L175 70 L175 160 Z"/>
+          </g>
+        </svg>
+        <p class="desc" id="dE">No te quedes con la imagen que otros te dieron.</p>
+      </section>
+
+      <section class="sc" id="sF">
+        <svg id="svgF" viewBox="0 0 960 540" aria-hidden="true">
+          <path id="route" d="M70 450 C190 450 210 330 330 330 S470 210 590 235 S760 370 850 160" fill="none" stroke="#d4a537" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 0"/>
+          <g id="wps"></g>
+          <g id="goal"><path d="M0 -26 L7 -8 L26 -8 L11 4 L17 22 L0 11 L-17 22 L-11 4 L-26 -8 L-7 -8 Z" fill="#b4232c"/></g>
+          <g id="pawn"><circle r="17" fill="#efe8d8"/><circle r="7" fill="#0d0c0b"/></g>
+        </svg>
+        <h2 class="ttl" id="tF">PLANEA HASTA EL FINAL</h2>
+        <p class="desc" id="dF">Piensa en el desenlace, no en el primer paso.</p>
+      </section>
+
+      <section class="sc" id="sG">
+        <h2 class="ttl" id="tG">DESCUBRE SU PUNTO DÉBIL</h2>
+        <div id="cards">
+          <div class="card"><span class="glow"></span><span class="lbl">MIEDO</span></div>
+          <div class="card"><span class="glow"></span><span class="lbl">ORGULLO</span></div>
+          <div class="card pickme"><span class="glow"></span><span class="lbl">CODICIA</span></div>
+          <div class="card"><span class="glow"></span><span class="lbl">DUDA</span></div>
+          <div class="card"><span class="glow"></span><span class="lbl">ENVIDIA</span></div>
+          <div class="card"><span class="glow"></span><span class="lbl">AFECTO</span></div>
+        </div>
+        <p class="desc" id="dG">Todos tienen una debilidad. Encuentra la de cada persona.</p>
+      </section>
+
+      <section class="sc" id="sH">
+        <h2 class="ttl" id="tH">ASUME LA INFORMIDAD</h2>
+        <p class="desc" id="dH">Sé fluido: que nadie pueda predecir tu forma.</p>
+      </section>
+
+      <section class="sc" id="sI">
+        <h2 class="ttl" id="tI">48 LEYES · 40 SEGUNDOS<br><span style="color:var(--gold)">1 TIMELINE</span></h2>
+        <div id="pills"><span>SplitText</span><span>ScrambleText</span><span>CustomWiggle</span><span>Physics2D</span><span>MorphSVG</span><span>DrawSVG</span><span>MotionPath</span><span>Flip</span></div>
+      </section>
+
+      <div id="bar"><i></i></div>
+    </div>
+  </div>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="melt" x="-20%" y="-30%" width="140%" height="160%">
+      <feTurbulence id="turb" type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap id="disp" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <div class="controls">
+    <button id="play" type="button">Cargando…</button>
+    <button id="replay" type="button" class="ghost">Repetir</button>
+    <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Posición de la animación">
+    <span id="time">0.0 / 40.0 s</span>
+  </div>
+
+  <ul id="index"></ul>
+  <p class="more"><b>También incluye, sin usarlo aquí:</b> ScrollTrigger y ScrollSmoother (animar al hacer scroll), Draggable e InertiaPlugin (arrastrar con inercia), Observer, TextPlugin, CustomBounce, EasePack, PixiPlugin y GSDevTools para depurar la línea de tiempo.</p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomWiggle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Physics2DPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MorphSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
+<script>
+(function () {
+  var GOLD = "#d4a537", CRIM = "#b4232c", IVORY = "#efe8d8", DUR = 40;
+  var $ = function (s) { return document.querySelector(s); };
+  gsap.registerPlugin(SplitText, ScrambleTextPlugin, CustomEase, CustomWiggle, Physics2DPlugin, MorphSVGPlugin, DrawSVGPlugin, MotionPathPlugin, Flip);
+
+  var wrap = $("#wrap"), stage = $("#stage");
+  function fit() { var s = wrap.clientWidth / 960; stage.style.transform = "scale(" + s + ")"; wrap.style.height = (540 * s) + "px"; }
+  fit(); window.addEventListener("resize", fit);
+
+  var tl;
+  var inv = function (ez, f) { var lo = 0, hi = 1; for (var k = 0; k < 30; k++) { var m = (lo + hi) / 2; if (ez(m) < f) lo = m; else hi = m; } return lo; };
+
+  function build() {
+    tl = gsap.timeline({ paused: true });
+
+    function scene(id, t0, dur, law, plug, last) {
+      gsap.set(id, { autoAlpha: 0 });
+      tl.fromTo(id, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, t0);
+      if (!last) tl.to(id, { autoAlpha: 0, duration: 0.3 }, t0 + dur - 0.3);
+      tl.set("#lawno", { textContent: law }, t0);
+      tl.set("#plug", { textContent: plug }, t0);
+      tl.fromTo("#plug", { y: -14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "back.out(2)" }, t0 + 0.05);
+    }
+
+    tl.fromTo("#bar i", { scaleX: 0 }, { scaleX: 1, duration: DUR, ease: "none" }, 0);
+
+    // ---- A (0-4): counter + SplitText ----
+    scene("#sA", 0, 4, "LEY 00", "gsap.to · snap · SplitText");
+    var cnt = { v: 0 }, n48 = $("#n48");
+    tl.to(cnt, { v: 48, duration: 1.5, ease: "power3.out", snap: { v: 1 }, onUpdate: function () { n48.textContent = cnt.v; } }, 0.2);
+    tl.fromTo("#n48", { scale: 1 }, { scale: 1.07, duration: 0.15, yoyo: true, repeat: 1, ease: "power2.out" }, 1.75);
+    var sA = SplitText.create("#tA", { type: "chars", mask: "chars" });
+    tl.from(sA.chars, { yPercent: 115, duration: 0.7, ease: "power4.out", stagger: 0.04 }, 1.3);
+    tl.from("#dA", { opacity: 0, y: 10, duration: 0.5 }, 2.4);
+
+    // ---- B (4-9): ScrambleText ----
+    scene("#sB", 4, 5, "LEY 03", "ScrambleTextPlugin");
+    tl.from("#eye", { scale: 0.4, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 4.3);
+    tl.to("#pupil", { x: -42, duration: 0.5, ease: "power2.inOut" }, 4.8);
+    tl.to("#pupil", { x: 42, duration: 0.7, ease: "power2.inOut" }, 5.4);
+    tl.to("#pupil", { x: 0, duration: 0.5, ease: "power2.inOut" }, 6.2);
+    tl.to("#eyeg", { scaleY: 0.05, duration: 0.18, yoyo: true, repeat: 1, transformOrigin: "50% 50%" }, 7.4);
+    tl.to("#b1", { duration: 1.4, scrambleText: { text: "OCULTA TUS", chars: "upperCase", revealDelay: 0.35, speed: 0.7 } }, 4.7);
+    tl.to("#b2", { duration: 1.6, scrambleText: { text: "INTENCIONES", chars: "upperCase", revealDelay: 0.5, speed: 0.7 } }, 5.2);
+    tl.from("#dB", { opacity: 0, y: 12, duration: 0.5 }, 6.9);
+
+    // ---- C (9-14): SplitText words + CustomWiggle ----
+    scene("#sC", 9, 5, "LEY 06", "SplitText · CustomWiggle");
+    CustomWiggle.create("wig", { wiggles: 10, type: "easeOut" });
+    var sC = SplitText.create("#tC", { type: "words", wordsClass: "w" });
+    tl.fromTo("#spot", { xPercent: -70, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1.3, ease: "power2.out" }, 9.2);
+    tl.to("#spot", { x: 170, duration: 0.9, yoyo: true, repeat: 1, ease: "sine.inOut" }, 11.4);
+    tl.from(sC.words, { scale: 0, rotation: function (i) { return ((i * 7) % 5 - 2) * 14; }, opacity: 0, duration: 1,
+                         ease: "elastic.out(1, 0.55)", stagger: { each: 0.13, from: "random" } }, 9.5);
+    tl.to(sC.words[2], { color: GOLD, scale: 1.18, duration: 0.4, ease: "power2.out" }, 11.2);
+    tl.to(sC.words[2], { rotation: 6, duration: 1.1, ease: "wig" }, 11.2);
+    tl.from("#dC", { opacity: 0, y: 12, duration: 0.5 }, 12.3);
+
+    // ---- D (14-19): stagger grid + Physics2D ----
+    scene("#sD", 14, 5, "LEY 15", "Physics2D · stagger grid");
+    var board = $("#board"), sq = [];
+    for (var i = 0; i < 32; i++) {
+      var c = document.createElement("i");
+      c.style.background = ((i % 8) + Math.floor(i / 8)) % 2 ? "#2b2622" : IVORY;
+      board.appendChild(c); sq.push(c);
+    }
+    var sD = SplitText.create("#tD", { type: "chars", mask: "chars" });
+    tl.from(sD.chars, { yPercent: 115, duration: 0.6, ease: "power4.out", stagger: 0.03 }, 14.3);
+    tl.from(sq, { scale: 0, duration: 0.4, ease: "back.out(2)", stagger: { grid: [4, 8], from: "center", amount: 0.7 } }, 14.6);
+    tl.to("#board", { x: "random(-9, 9)", y: "random(-5, 5)", duration: 0.05, repeat: 9, yoyo: true }, 16.0);
+    tl.fromTo("#flashD", { opacity: 0 }, { opacity: 0.4, duration: 0.08, yoyo: true, repeat: 1 }, 16.25);
+    sq.forEach(function (el, k) {
+      tl.to(el, { duration: 2.4, ease: "none", rotation: ((k * 29) % 9 - 4) * 110,
+                  physics2D: { velocity: 300 + ((k * 37) % 7) * 70, angle: -90 + ((k * 53) % 11 - 5) * 15, gravity: 1500 } }, 16.25);
+    });
+    tl.from("#totD", { scale: 3.2, opacity: 0, duration: 0.4, ease: "power4.out" }, 17.0);
+    tl.from("#dD", { opacity: 0, y: 12, duration: 0.5 }, 17.6);
+
+    // ---- E (19-24): MorphSVG ----
+    scene("#sE", 19, 5, "LEY 25", "MorphSVGPlugin");
+    var sE = SplitText.create("#tE", { type: "chars", mask: "chars" });
+    tl.from(sE.chars, { yPercent: 115, duration: 0.6, ease: "power4.out", stagger: 0.04 }, 19.3);
+    tl.from("#shape", { scale: 0, transformOrigin: "50% 50%", duration: 0.8, ease: "elastic.out(1, 0.5)" }, 19.6);
+    tl.to("#shape", { morphSVG: "#m2", fill: CRIM, duration: 0.9, ease: "power3.inOut" }, 20.5);
+    tl.to("#shape", { morphSVG: "#m3", fill: IVORY, duration: 0.9, ease: "power3.inOut" }, 21.5);
+    tl.to("#shape", { morphSVG: "#m4", fill: GOLD, duration: 0.9, ease: "power3.inOut" }, 22.5);
+    tl.fromTo("#shapeSvg", { rotation: 0 }, { rotation: 360, duration: 3.2, ease: "power1.inOut", transformOrigin: "50% 50%" }, 20.3);
+    tl.from("#dE", { opacity: 0, y: 12, duration: 0.5 }, 22.9);
+
+    // ---- F (24-29): DrawSVG + MotionPath ----
+    scene("#sF", 24, 5, "LEY 29", "DrawSVG · MotionPath");
+    var route = $("#route"), len = route.getTotalLength(), wps = $("#wps"), fr = [0.17, 0.38, 0.6, 0.8];
+    var easeIO = gsap.parseEase("power1.inOut"), DRAW0 = 24.5, DRAWD = 1.4, MOVE0 = 26.0, MOVED = 2.5;
+    fr.forEach(function (f) {
+      var pt = route.getPointAtLength(len * f), w = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      w.setAttribute("cx", pt.x); w.setAttribute("cy", pt.y); w.setAttribute("r", 12); w.setAttribute("fill", "#0d0c0b");
+      w.setAttribute("stroke", GOLD); w.setAttribute("stroke-width", 4); wps.appendChild(w);
+      tl.from(w, { scale: 0, transformOrigin: "50% 50%", duration: 0.3, ease: "back.out(3)" }, DRAW0 + DRAWD * inv(easeIO, f));
+      tl.to(w, { fill: CRIM, duration: 0.2 }, MOVE0 + MOVED * inv(easeIO, f));
+    });
+    var end = route.getPointAtLength(len);
+    gsap.set("#goal", { x: end.x, y: end.y });
+    gsap.set("#pawn", { x: 70, y: 450 });
+    tl.from("#tF", { opacity: 0, x: -30, duration: 0.5, ease: "power3.out" }, 24.3);
+    tl.fromTo(route, { drawSVG: "0%" }, { drawSVG: "100%", duration: DRAWD, ease: "power1.inOut" }, DRAW0);
+    tl.from("#pawn", { scale: 0, transformOrigin: "50% 50%", duration: 0.4, ease: "back.out(3)" }, 25.7);
+    tl.to("#pawn", { motionPath: { path: "#route", align: "#route", alignOrigin: [0.5, 0.5] }, duration: MOVED, ease: "power1.inOut" }, MOVE0);
+    tl.from("#goal", { scale: 0, rotation: -180, transformOrigin: "50% 50%", duration: 0.6, ease: "back.out(2.5)" }, MOVE0 + MOVED - 0.1);
+    tl.from("#dF", { opacity: 0, y: 12, duration: 0.5 }, 24.6);
+
+    // ---- G (29-34): Flip ----
+    scene("#sG", 29, 5, "LEY 33", "Flip");
+    var cards = $("#cards"), cardEls = gsap.utils.toArray(".card"), pick = $(".pickme");
+    var sG = SplitText.create("#tG", { type: "chars", mask: "chars" });
+    tl.from(sG.chars, { yPercent: 115, duration: 0.5, ease: "power4.out", stagger: 0.025 }, 29.3);
+    tl.from("#cards", { opacity: 0, duration: 0.6, ease: "power3.out" }, 29.5);
+    tl.fromTo(".card .glow", { opacity: 0 }, { opacity: 1, duration: 0.18, yoyo: true, repeat: 1, stagger: 0.28 }, 30.2);
+    var state = Flip.getState(cardEls, { props: "backgroundColor,borderColor,opacity,color,fontSize" });
+    cards.classList.add("final"); pick.classList.add("pick");
+    var flip = Flip.from(state, { targets: cardEls, duration: 1.1, ease: "power3.inOut", absolute: true, props: "backgroundColor,borderColor,opacity,color,fontSize" });
+    tl.add(flip, 32.0);
+    tl.from("#dG", { opacity: 0, y: 12, duration: 0.5 }, 33.1);
+
+    // ---- H (34-38): SVG filter attributes ----
+    scene("#sH", 34, 4, "LEY 48", "attr · filtros SVG");
+    tl.from("#tH", { opacity: 0, scale: 0.92, duration: 0.6, ease: "power3.out" }, 34.3);
+    tl.to("#disp", { attr: { scale: 150 }, duration: 2.2, ease: "power2.in" }, 35.0);
+    tl.to("#turb", { attr: { baseFrequency: "0.03 0.09" }, duration: 2.2, ease: "none" }, 35.0);
+    tl.to("#tH", { letterSpacing: "0.08em", duration: 2.2, ease: "power2.in" }, 35.0);
+    tl.to("#tH", { opacity: 0, duration: 0.5 }, 37.1);
+    tl.from("#dH", { opacity: 0, y: 12, duration: 0.5 }, 34.9);
+
+    // ---- I (38-40): closing ----
+    scene("#sI", 38, 2, "FIN", "1 timeline", true);
+    tl.from("#tI", { scale: 1.25, opacity: 0, duration: 0.5, ease: "power4.out" }, 38.2);
+    tl.from("#pills span", { y: 20, opacity: 0, duration: 0.35, ease: "back.out(2)", stagger: { each: 0.06, from: "random" } }, 38.5);
+    tl.set({}, {}, DUR);
+
+    return tl;
+  }
+
+  // ---- Controls and index ----
+  var scrub = $("#scrub"), time = $("#time"), play = $("#play");
+  function sync() {
+    scrub.value = Math.round((tl.time() / DUR) * 1000);
+    time.textContent = tl.time().toFixed(1) + " / " + DUR.toFixed(1) + " s";
+    play.textContent = tl.paused() ? (tl.progress() === 1 ? "Repetir" : "Reproducir") : "Pausa";
+  }
+  var items = [
+    [0, "SplitText", "Corta un texto en letras, palabras o líneas y anima cada pieza."],
+    [4, "ScrambleTextPlugin", "Descifra un texto desde caracteres aleatorios."],
+    [9, "CustomWiggle", "Crea una curva de temblor a medida para una sacudida."],
+    [14, "Physics2D", "Velocidad, ángulo y gravedad reales para que las piezas caigan."],
+    [19, "MorphSVGPlugin", "Transforma una forma vectorial en otra, también el color."],
+    [24, "DrawSVG + MotionPath", "Dibuja un trazo y mueve un objeto siguiendo esa curva."],
+    [29, "Flip", "Anima cambios de diseño de la página: reordenar, agrandar, encoger."],
+    [34, "Atributos SVG", "Anima cualquier atributo, aquí un filtro que deshace el texto."]
+  ];
+  var idx = $("#index");
+  items.forEach(function (it) {
+    var li = document.createElement("li"), b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = '<span class="t">' + it[0].toFixed(0).padStart(2, "0") + ' s</span><b>' + it[1] + '</b><small>' + it[2] + '</small>';
+    b.addEventListener("click", function () { if (!tl) return; tl.pause(); tl.time(it[0] + 0.05); tl.play(); sync(); });
+    li.appendChild(b); idx.appendChild(li);
+  });
+
+  var started = false;
+  function start() {
+    if (started) return; started = true;
+    build();
+    tl.eventCallback("onUpdate", sync); tl.eventCallback("onComplete", sync);
+    play.addEventListener("click", function () { if (tl.progress() === 1) tl.restart(); else if (tl.paused()) tl.play(); else tl.pause(); sync(); });
+    $("#replay").addEventListener("click", function () { tl.restart(); sync(); });
+    scrub.addEventListener("input", function () { tl.pause(); tl.time((scrub.value / 1000) * DUR); sync(); });
+    window.__tl = tl;
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { tl.progress(1).pause(); } else { tl.play(); }
+    sync();
+  }
+  // Split text only after fonts are ready so letter positions are right.
+  var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  Promise.race([fontsReady, new Promise(function (r) { setTimeout(r, 2500); })]).then(start);
+})();
+</script>
