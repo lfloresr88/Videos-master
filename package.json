@@ -1,0 +1,23 @@
+{
+  "name": "videos-master",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lfloresr88/Videos-master.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lfloresr88/Videos-master/issues"
+  },
+  "homepage": "https://github.com/lfloresr88/Videos-master#readme",
+  "dependencies": {
+    "gsap": "^3.15.1"
+  }
+}

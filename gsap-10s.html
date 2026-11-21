@@ -1,0 +1,291 @@
+<title>GSAP en 10 segundos</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&display=swap">
+<style>
+  /* Layout: a fixed 960x540 stage scaled to the page width, with a control strip underneath. */
+  :root {
+    --page: #f4f2ee;
+    --ink: #1a1613;
+    --muted: #6b635b;
+    --line: #d9d4cc;
+    --chip: #ebe7e0;
+    --orange: #ff5a1f;
+    --stage: #141210;
+    --cream: #f3efe8;
+    --display: "Archivo Black", Impact, "Arial Black", sans-serif;
+    --mono: "Space Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --page: #0e0d0c; --ink: #f3efe8; --muted: #a39a90; --line: #2c2723; --chip: #1c1917; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --page: #0e0d0c; --ink: #f3efe8; --muted: #a39a90; --line: #2c2723; --chip: #1c1917; color-scheme: dark;
+  }
+  body {
+    background: var(--page); color: var(--ink);
+    font-family: var(--mono); font-size: 14px;
+    padding-block: 24px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  main { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(1.4rem, 4vw, 2rem); letter-spacing: -0.01em; text-wrap: balance; }
+  .sub { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; max-width: 65ch; }
+
+  #wrap { width: 100%; position: relative; border-radius: 10px; overflow: hidden; background: var(--stage); }
+  #stage { width: 960px; height: 540px; position: absolute; left: 0; top: 0; transform-origin: 0 0; overflow: hidden; background: var(--stage); color: var(--cream); }
+  .layer { position: absolute; inset: 0; }
+
+  /* Scene 1 */
+  #s1 { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+  .big { font-family: var(--display); font-size: 220px; line-height: 0.95; display: flex; letter-spacing: -0.02em; }
+  .big span, .mov span { display: inline-block; will-change: transform; }
+  .mov { font-family: var(--display); font-size: 66px; color: var(--orange); display: flex; line-height: 1; letter-spacing: -0.01em; }
+  .sp { width: 0.3em; }
+  #tag { position: absolute; right: 120px; top: 120px; background: var(--orange); color: var(--stage); font-family: var(--mono); font-weight: 700; font-size: 20px; padding: 10px 16px; border-radius: 6px; transform-origin: 20% 50%; }
+
+  /* Scene 2 */
+  #s2 { left: 80px; top: 90px; width: 800px; height: 360px; position: absolute; background: #1f1b18; border: 1px solid #332d28; border-radius: 16px; }
+  #s2 .eyebrow { position: absolute; left: 28px; top: 22px; font-size: 13px; letter-spacing: 0.18em; color: #9a9088; }
+  #pill { position: absolute; left: 90px; top: 14px; background: var(--orange); color: var(--stage); font-weight: 700; font-size: 18px; padding: 6px 14px; border-radius: 6px; min-width: 150px; }
+  #graph { position: absolute; left: 20px; top: 56px; width: 460px; height: 290px; }
+  #track { position: absolute; left: 500px; top: 56px; width: 280px; height: 290px; background: #0f0d0c; border-radius: 10px; }
+  #ball { position: absolute; left: 26px; top: 123px; width: 44px; height: 44px; border-radius: 50%; background: var(--orange); }
+  #trackline { position: absolute; left: 26px; right: 26px; bottom: 36px; height: 2px; background: #332d28; }
+
+  /* Scene 3-4 */
+  #field { transform-origin: 50% 50%; }
+  .dot { position: absolute; left: 474px; top: 264px; width: 12px; height: 12px; border-radius: 50%; background: var(--cream); will-change: transform; }
+  #wipe { position: absolute; left: 420px; top: 210px; width: 120px; height: 120px; border-radius: 50%; background: var(--orange); transform: scale(0); }
+
+  /* Finale */
+  #end { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; color: var(--stage); }
+  #end .num { font-family: var(--display); font-size: 200px; line-height: 0.95; display: flex; }
+  #end .num span { display: inline-block; }
+  #end .line { font-weight: 700; font-size: 22px; letter-spacing: 0.02em; }
+
+  /* Controls */
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  button { font: inherit; font-weight: 700; color: var(--stage); background: var(--orange); border: 0; border-radius: 6px; padding: 9px 16px; cursor: pointer; }
+  button.ghost { background: var(--chip); color: var(--ink); }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  #scrub { flex: 1 1 200px; min-width: 0; accent-color: var(--orange); }
+  #time { font-variant-numeric: tabular-nums; color: var(--muted); min-width: 9ch; text-align: right; }
+  .scenes { display: flex; flex-wrap: wrap; gap: 8px; }
+  .scenes button { background: var(--chip); color: var(--ink); font-weight: 400; padding: 7px 12px; font-size: 13px; }
+  .scenes .t { color: var(--muted); margin-left: 6px; font-variant-numeric: tabular-nums; }
+  .uses { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px 24px; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+  .uses b { color: var(--ink); }
+</style>
+
+<main>
+  <header>
+    <h1>GSAP en 10 segundos</h1>
+    <p class="sub">Una sola línea de tiempo controla todo lo que ves: letras, curvas de easing, una cuadrícula de 98 partículas y el cierre. Arrastra la barra para recorrerla.</p>
+  </header>
+
+  <div id="wrap" role="img" aria-label="Animación de 10 segundos hecha con GSAP">
+    <div id="stage">
+      <div class="layer" id="s1">
+        <div class="big" data-split="GSAP"></div>
+        <div class="mov" data-split="EL MOVIMIENTO"></div>
+        <div id="tag">100 % GRATIS</div>
+      </div>
+
+      <div id="s2">
+        <div class="eyebrow">EASE</div>
+        <div id="pill">back.out</div>
+        <svg id="graph" viewBox="0 0 460 290" aria-hidden="true">
+          <line x1="30" y1="260" x2="440" y2="260" stroke="#4a423c" stroke-width="2"/>
+          <line x1="30" y1="20" x2="30" y2="260" stroke="#4a423c" stroke-width="2"/>
+          <line x1="30" y1="110" x2="440" y2="110" stroke="#4a423c" stroke-width="1" stroke-dasharray="4 6"/>
+          <path class="curve" fill="none" stroke="#ff5a1f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path class="curve" fill="none" stroke="#ff5a1f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path class="curve" fill="none" stroke="#ff5a1f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="dot" r="9" fill="#f3efe8" cx="30" cy="260"/>
+        </svg>
+        <div id="track"><div id="trackline"></div><div id="ball"></div></div>
+      </div>
+
+      <div class="layer" id="field"></div>
+      <div id="wipe"></div>
+
+      <div class="layer" id="end">
+        <div class="num" data-split="10 s"></div>
+        <div class="line">1 timeline · 98 partículas · 0 keyframes de CSS</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="play" type="button">Pausa</button>
+    <button id="replay" type="button" class="ghost">Repetir</button>
+    <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Posición de la animación">
+    <span id="time">0.0 / 10.0 s</span>
+  </div>
+  <div class="scenes" id="scenes"></div>
+
+  <ul class="uses">
+    <li><b>stagger con grid</b> reparte el retraso desde el centro de la cuadrícula de partículas.</li>
+    <li><b>gsap.parseEase</b> convierte back, elastic y bounce en las curvas que se dibujan.</li>
+    <li><b>funciones por índice</b> colocan cada partícula en uno de dos anillos.</li>
+    <li><b>timeline con labels</b> permite pausar, retroceder y saltar a cualquier escena.</li>
+  </ul>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function () {
+  var ORANGE = "#ff5a1f", CREAM = "#f3efe8";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+
+  // Split text into one span per character.
+  document.querySelectorAll("[data-split]").forEach(function (el) {
+    el.innerHTML = el.dataset.split.split("").map(function (c) {
+      return c === " " ? '<span class="sp"></span>' : "<span>" + c + "</span>";
+    }).join("");
+  });
+
+  // Fit the fixed 960x540 stage to the available width.
+  var wrap = $("#wrap"), stage = $("#stage");
+  function fit() {
+    var s = wrap.clientWidth / 960;
+    stage.style.transform = "scale(" + s + ")";
+    wrap.style.height = (540 * s) + "px";
+  }
+  fit();
+  window.addEventListener("resize", fit);
+
+  // Particles: 14 x 7 grid that later becomes two rings.
+  var field = $("#field"), COLS = 14, ROWS = 7, N = COLS * ROWS, SP = 52;
+  for (var i = 0; i < N; i++) {
+    var d = document.createElement("div");
+    d.className = "dot";
+    field.appendChild(d);
+  }
+  var dots = gsap.utils.toArray(".dot");
+  gsap.set(dots, {
+    x: function (i) { return ((i % COLS) - (COLS - 1) / 2) * SP; },
+    y: function (i) { return (Math.floor(i / COLS) - (ROWS - 1) / 2) * SP; },
+    scale: 0
+  });
+  function ringPos(i) {
+    var outer = i < 56, k = outer ? i : i - 56, n = outer ? 56 : 42, r = outer ? 200 : 130;
+    var a = (k / n) * Math.PI * 2 + (outer ? 0 : Math.PI / n);
+    return { x: Math.cos(a) * r, y: Math.sin(a) * r };
+  }
+
+  // Easing curves sampled from GSAP's own ease functions.
+  function curvePath(ez) {
+    var pts = [];
+    for (var k = 0; k <= 70; k++) {
+      var t = k / 70;
+      pts.push((30 + t * 400).toFixed(1) + " " + (260 - ez(t) * 150).toFixed(1));
+    }
+    return "M" + pts.join(" L");
+  }
+
+  var tl = gsap.timeline({ paused: true, defaults: { overwrite: false } });
+  var G = ".big span", M = ".mov span";
+
+  // ---- Scene 1 (0 - 2.6s): letters ----
+  tl.addLabel("letras", 0);
+  tl.from(G, { yPercent: 140, rotation: function (i) { return [-25, 18, -14, 22][i]; }, opacity: 0, scale: 0.4,
+               duration: 0.8, ease: "back.out(2.4)", stagger: 0.1 }, 0);
+  tl.from(M, { y: 50, opacity: 0, duration: 0.5, ease: "power3.out", stagger: 0.035 }, 0.7);
+  tl.from("#tag", { scale: 0, rotation: -22, duration: 0.9, ease: "elastic.out(1, 0.4)" }, 1.1);
+  tl.to(G, { yPercent: -140, opacity: 0, duration: 0.45, ease: "power4.in", stagger: 0.06 }, 2.1);
+  tl.to(M, { y: -40, opacity: 0, duration: 0.35, ease: "power2.in", stagger: 0.02 }, 2.2);
+  tl.to("#tag", { scale: 0, rotation: 15, duration: 0.3, ease: "back.in(2)" }, 2.2);
+
+  // ---- Scene 2 (2.6 - 5.4s): easing curves ----
+  tl.addLabel("curvas", 2.6);
+  gsap.set("#s2", { opacity: 0 });
+  tl.fromTo("#s2", { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 2.6);
+  var eases = [
+    { fn: "back.out(1.7)", name: "back.out" },
+    { fn: "elastic.out(1, 0.4)", name: "elastic.out" },
+    { fn: "bounce.out", name: "bounce.out" }
+  ];
+  var curves = gsap.utils.toArray(".curve"), dot = $("#dot");
+  eases.forEach(function (e, i) {
+    var ez = gsap.parseEase(e.fn), p = curves[i], t0 = 3.0 + i * 0.8, proxy = { t: 0 };
+    p.setAttribute("d", curvePath(ez));
+    var len = p.getTotalLength();
+    gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+    tl.set("#pill", { textContent: e.name }, t0);
+    tl.set(dot, { opacity: 1 }, t0);
+    tl.set("#ball", { x: 0 }, t0);
+    tl.fromTo(p, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.7, ease: "none" }, t0);
+    tl.fromTo(proxy, { t: 0 }, { t: 1, duration: 0.7, ease: "none", onUpdate: function () {
+      dot.setAttribute("cx", 30 + proxy.t * 400);
+      dot.setAttribute("cy", 260 - ez(proxy.t) * 150);
+    } }, t0);
+    tl.fromTo("#ball", { x: 0 }, { x: 180, duration: 0.7, ease: e.fn }, t0);
+    tl.to(p, { opacity: 0, duration: 0.15 }, t0 + 0.76);
+  });
+  tl.to("#s2", { scale: 0.88, opacity: 0, duration: 0.35, ease: "power2.in" }, 5.3);
+
+  // ---- Scene 3 (5.4 - 6.9s): stagger grid ----
+  tl.addLabel("cuadricula", 5.4);
+  var gridStag = function (amount) { return { grid: [ROWS, COLS], from: "center", amount: amount }; };
+  tl.to(dots, { scale: 1, duration: 0.5, ease: "back.out(3)", stagger: gridStag(0.6) }, 5.4);
+  tl.to(dots, { y: "-=36", duration: 0.35, ease: "sine.inOut", yoyo: true, repeat: 1, stagger: gridStag(0.5) }, 6.0);
+  tl.to(dots, { backgroundColor: function (i) { return i % 3 === 0 ? ORANGE : CREAM; }, duration: 0.3, stagger: gridStag(0.5) }, 6.0);
+
+  // ---- Scene 4 (6.9 - 8.9s): rings, spin, implosion ----
+  tl.addLabel("anillos", 6.9);
+  tl.to(dots, { x: function (i) { return ringPos(i).x; }, y: function (i) { return ringPos(i).y; },
+                duration: 0.9, ease: "power3.inOut", stagger: { amount: 0.4, from: "random" } }, 6.9);
+  tl.to(dots, { backgroundColor: function (i) { return i < 56 ? ORANGE : CREAM; }, duration: 0.4 }, 7.4);
+  tl.fromTo(field, { rotation: 0, scale: 1 }, { rotation: 360, scale: 1.12, duration: 1.1, ease: "power2.inOut" }, 7.8);
+  tl.to(dots, { x: 0, y: 0, duration: 0.4, ease: "power4.in", stagger: { amount: 0.12, from: "random" } }, 8.75);
+
+  // ---- Finale (8.9 - 10s) ----
+  tl.addLabel("cierre", 8.9);
+  tl.fromTo("#wipe", { scale: 0 }, { scale: 16, duration: 0.7, ease: "expo.out" }, 8.95);
+  tl.set(field, { opacity: 0 }, 9.35);
+  gsap.set("#end", { opacity: 0 });
+  tl.set("#end", { opacity: 1 }, 9.3);
+  tl.from("#end .num span", { yPercent: 120, rotation: function (i) { return [-14, 0, 12, -10][i] || 0; }, opacity: 0,
+                              duration: 0.55, ease: "back.out(2.2)", stagger: 0.07 }, 9.3);
+  tl.from("#end .line", { y: 24, opacity: 0, duration: 0.45, ease: "power3.out" }, 9.55);
+  tl.set({}, {}, 10); // pad the timeline to exactly 10 seconds
+
+  // ---- Controls ----
+  var DUR = 10, scrub = $("#scrub"), time = $("#time"), play = $("#play");
+  function sync() {
+    scrub.value = Math.round((tl.time() / DUR) * 1000);
+    time.textContent = tl.time().toFixed(1) + " / " + DUR.toFixed(1) + " s";
+    play.textContent = tl.paused() ? (tl.progress() === 1 ? "Repetir" : "Reproducir") : "Pausa";
+  }
+  tl.eventCallback("onUpdate", sync);
+  tl.eventCallback("onComplete", sync);
+
+  play.addEventListener("click", function () {
+    if (tl.progress() === 1) tl.restart(); else if (tl.paused()) tl.play(); else tl.pause();
+    sync();
+  });
+  $("#replay").addEventListener("click", function () { tl.restart(); sync(); });
+  scrub.addEventListener("input", function () { tl.pause(); tl.time((scrub.value / 1000) * DUR); sync(); });
+
+  var names = { letras: "Letras", curvas: "Curvas", cuadricula: "Cuadrícula", anillos: "Anillos", cierre: "Cierre" };
+  var scenes = $("#scenes");
+  Object.keys(names).forEach(function (k) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = names[k] + '<span class="t">' + tl.labels[k].toFixed(1) + " s</span>";
+    b.addEventListener("click", function () { tl.pause(); tl.seek(tl.labels[k] + 0.001); tl.play(); sync(); });
+    scenes.appendChild(b);
+  });
+
+  window.__tl = tl;
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    tl.progress(1).pause(); sync();
+  } else {
+    tl.play(); sync();
+  }
+})();
+</script>
