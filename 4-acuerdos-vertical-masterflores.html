@@ -1,0 +1,564 @@
+<title>Los Cuatro Acuerdos Master flores</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;800&display=swap">
+<style>
+  /* Layout: a 540x960 vertical stage (9:16) in Master flores colours: deep blue sky, mint accents, corner arcs. */
+  :root {
+    --page: #ffffff;
+    --ink: #0c2f73;
+    --muted: #575756;
+    --line: #d9e3f7;
+    --chip: #eef3fd;
+    --blue: #0f69f7;
+    --blue-d: #194e8e;
+    --mint: #27fcaa;
+    --green: #10c47b;
+    --accent: #20e19e;
+    --navy: #05398c;
+    --elec: #0c41cb;
+    --sans: "Poppins", "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --page: #06204f; --ink: #ffffff; --muted: #b9c7e6; --line: #1b3c7a; --chip: #0b2c6b; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --page: #06204f; --ink: #ffffff; --muted: #b9c7e6; --line: #1b3c7a; --chip: #0b2c6b; color-scheme: dark; }
+  body {
+    background: var(--page); color: var(--ink); font-family: var(--sans); font-size: 14px;
+    padding-block: 24px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  main { max-width: 440px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  h1 { margin: 0; font-weight: 800; font-size: clamp(1.5rem, 6vw, 2rem); line-height: 1.15; color: var(--blue); text-wrap: balance; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) h1 { color: var(--mint); } }
+  :root[data-theme="dark"] h1 { color: var(--mint); }
+  .sub { margin: 6px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+  #wrap { width: 100%; position: relative; border-radius: 20px; overflow: hidden; background: var(--navy); }
+  #stage { width: 540px; height: 960px; position: absolute; left: 0; top: 0; transform-origin: 0 0; overflow: hidden; background: var(--navy); color: #fff; font-family: var(--sans); }
+  .sky { position: absolute; inset: 0; }
+  #sky0 { background: linear-gradient(#05398c, #0c41cb 80%); }
+  #sky1 { background: linear-gradient(#0c41cb, #0f69f7 75%); opacity: 0; }
+  #sky2 { background: linear-gradient(#0f69f7 10%, #3f8cff 55%, #27fcaa 100%); opacity: 0; }
+  #world { position: absolute; inset: 0; width: 540px; height: 960px; }
+  .arc { position: absolute; border-radius: 50%; pointer-events: none; }
+  #arc1 { width: 470px; height: 470px; right: -200px; top: -210px; background: #194e8e; }
+  #arc2 { width: 380px; height: 380px; left: -150px; bottom: -250px; background: #20e19e; }
+  #arc3 { width: 250px; height: 250px; right: -130px; bottom: 190px; background: #194e8e; opacity: 0.85; }
+  #shade { position: absolute; left: 0; right: 0; bottom: 0; height: 330px; background: linear-gradient(transparent, #05398ce6 45%); pointer-events: none; }
+
+  .lockup { text-align: center; line-height: 1; font-weight: 800; }
+  .lockup .lt b { display: block; color: var(--mint); font-weight: 800; }
+  .lockup .lt i { display: block; color: #fff; font-style: normal; font-weight: 600; }
+  .lockup .slg { margin-top: 8px; font-weight: 500; color: #fff; }
+  .lockup img { display: none; max-width: 100%; }
+  .lockup.hasimg img { display: block; margin: 0 auto; }
+  .lockup.hasimg .lt { display: none; }
+  #brandTop { position: absolute; left: 28px; top: 30px; font-size: 20px; text-align: left; }
+  #brandTop img { height: 44px; }
+  #brandTop .lt b, #brandTop .lt i { line-height: 1.02; }
+
+  .hdr { position: absolute; left: 36px; top: 104px; width: 470px; display: flex; gap: 14px; align-items: center; }
+  .hdr .num { font-weight: 800; font-size: 92px; line-height: 0.9; color: var(--mint); }
+  .hdr .lab { font-size: 12px; letter-spacing: 0.2em; font-weight: 600; color: var(--mint); margin-bottom: 4px; }
+  .hdr .ttl { font-weight: 800; font-size: 27px; line-height: 1.12; text-wrap: balance; }
+  .cap { position: absolute; left: 40px; right: 40px; bottom: 150px; text-align: center; font-size: 22px; font-weight: 500; line-height: 1.35; text-wrap: balance; text-shadow: 0 2px 10px #05398c; }
+  #title { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center; padding: 0 36px; }
+  #title .lockup { font-size: 66px; }
+  #title .lockup .slg { font-size: 19px; letter-spacing: 0.02em; }
+  #title .lockup img { height: 150px; }
+  #title h2 { margin: 6px 0 0; font-weight: 800; font-size: 58px; line-height: 1.05; }
+  #title p { margin: 0; font-size: 20px; font-weight: 500; letter-spacing: 0.04em; color: var(--mint); }
+  #meter { position: absolute; left: 36px; top: 252px; width: 300px; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; }
+  #meter .bar { height: 12px; border-radius: 6px; background: #ffffff33; margin-top: 7px; overflow: hidden; }
+  #meter .fill { height: 100%; width: 40%; background: var(--mint); border-radius: 6px; }
+  #meter .val { color: var(--mint); font-variant-numeric: tabular-nums; }
+  #fin { position: absolute; left: 36px; top: 410px; width: 330px; }
+  #fin h3 { margin: 0; font-weight: 800; font-size: 36px; line-height: 1.1; }
+  #credit { position: absolute; left: 30px; right: 30px; bottom: 54px; text-align: center; font-size: 14px; font-weight: 500; color: #ffffffd9; }
+  #endBrand { position: absolute; left: 0; right: 0; bottom: 96px; font-size: 30px; }
+  #endBrand .lt b, #endBrand .lt i { display: inline; }
+  #endBrand .slg { font-size: 15px; }
+  #endBrand img { height: 64px; }
+  #bar { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: #ffffff33; }
+  #bar i { display: block; height: 100%; background: var(--mint); transform-origin: 0 50%; transform: scaleX(0); }
+
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  button { font: inherit; font-weight: 600; color: #fff; background: var(--blue); border: 0; border-radius: 999px; padding: 9px 18px; cursor: pointer; }
+  button.ghost { background: var(--chip); color: var(--ink); }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  #scrub { flex: 1 1 140px; min-width: 0; accent-color: var(--blue); }
+  #time { font-variant-numeric: tabular-nums; color: var(--muted); min-width: 10ch; text-align: right; }
+  #index { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr; gap: 8px; }
+  #index button { width: 100%; text-align: left; background: var(--chip); color: var(--ink); font-weight: 400; border-radius: 14px; display: grid; grid-template-columns: 4.6ch 1fr; gap: 3px 12px; align-items: baseline; padding: 10px 14px; }
+  #index .t { color: var(--blue); font-weight: 600; font-variant-numeric: tabular-nums; grid-row: span 2; }
+  #index b { font-weight: 600; }
+  #index small { color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+  .note { margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+</style>
+
+<main>
+  <header>
+    <h1>Los Cuatro Acuerdos</h1>
+    <p class="sub">Historia vertical de 60 segundos para redes, con la línea gráfica de Master flores. Alguien carga cuatro piedras invisibles y las suelta una a una. Pulsa un capítulo para saltar a él.</p>
+  </header>
+
+  <div id="wrap" role="img" aria-label="Animación vertical de 60 segundos sobre los cuatro acuerdos de don Miguel Ruiz, con la marca Master flores">
+    <div id="stage">
+      <div class="sky" id="sky0"></div><div class="sky" id="sky1"></div><div class="sky" id="sky2"></div>
+      <div class="arc" id="arc1"></div><div class="arc" id="arc3"></div>
+      <svg id="world" viewBox="0 0 540 960" aria-hidden="true">
+        <defs>
+          <radialGradient id="sunG"><stop offset="0" stop-color="#ffffff"/><stop offset="0.45" stop-color="#27fcaa"/><stop offset="1" stop-color="#27fcaa" stop-opacity="0"/></radialGradient>
+        </defs>
+        <g id="stars"></g>
+        <g id="sunW" opacity="0"><circle id="sun" cx="440" cy="500" r="200" fill="url(#sunG)"/></g>
+        <polygon id="mtn1" fill="#194e8e" points="0,690 0,585 70,552 150,606 240,566 330,628 420,572 540,598 540,690"/>
+        <polygon id="mtn2" fill="#0c41cb" points="0,690 0,640 90,612 190,654 290,622 400,660 540,628 540,690"/>
+        <polygon id="stairFill" fill="#05398c" points="180,690 180,650 245,650 245,612 305,612 305,574 365,574 365,536 425,536 425,498 540,498 540,690" opacity="0"/>
+        <rect id="ground" x="0" y="690" width="540" height="270" fill="#05398c"/>
+        <rect x="0" y="690" width="540" height="3" fill="#ffffff2e"/>
+        <path id="stairs" d="M180 690 L180 650 L245 650 L245 612 L305 612 L305 574 L365 574 L365 536 L425 536 L425 498 L540 498" fill="none" stroke="#27fcaa" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+        <g id="friendG"></g>
+        <g id="friend2G"></g>
+        <g id="heroG"></g>
+        <g id="fx"></g>
+        <g id="const">
+          <path id="cline" d="M220 320 L310 352 L400 320 L490 352" fill="none" stroke="#ffffff" stroke-opacity="0.8" stroke-width="2" stroke-dasharray="1 0" stroke-linecap="round"/>
+        </g>
+        <g opacity="0"><path id="starD" d="M0 -16 L4.6 -5.5 L16 -5 L7 2.5 L10 14 L0 7.8 L-10 14 L-7 2.5 L-16 -5 L-4.6 -5.5 Z"/>
+          <path id="sunD" d="M0 -46 C25 -46 46 -25 46 0 C46 25 25 46 0 46 C-25 46 -46 25 -46 0 C-46 -25 -25 -46 0 -46 Z"/></g>
+      </svg>
+      <div class="arc" id="arc2"></div>
+      <div id="shade"></div>
+      <div class="lockup" id="brandTop"><img src="logo-master-flores.png" alt="Master flores"><div class="lt"><b>Master</b><i>flores</i></div></div>
+      <div id="title">
+        <div class="lockup" id="lk1"><img src="logo-master-flores.png" alt="Master flores"><div class="lt"><b>Master</b><i>flores</i></div><div class="slg">Aprendizaje en acción</div></div>
+        <h2 id="t1">LOS CUATRO ACUERDOS</h2><p id="t2">según don Miguel Ruiz</p>
+      </div>
+      <div id="hdrs"></div><div id="caps"></div>
+      <div id="meter"><div>TU MÁXIMO HOY <span class="val" id="mval">40 %</span></div><div class="bar"><div class="fill" id="mfill"></div></div></div>
+      <div id="fin"><h3 id="f1">Cuatro acuerdos.</h3><h3 id="f2" style="color:var(--mint)">Una vida más ligera.</h3></div>
+      <div class="lockup" id="endBrand"><img src="logo-master-flores.png" alt="Master flores"><div class="lt"><b>Master</b> <i>flores</i></div><div class="slg">Aprendizaje en acción</div></div>
+      <div id="credit">Basado en «Los cuatro acuerdos» de don Miguel Ruiz</div>
+      <div id="bar"><i></i></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="play" type="button">Cargando…</button>
+    <button id="replay" type="button" class="ghost">Repetir</button>
+    <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Posición de la animación">
+    <span id="time">0.0 / 60.0 s</span>
+  </div>
+  <ul id="index"></ul>
+  <p class="note">Las frases de cada acuerdo son resúmenes propios de las ideas del libro, no citas textuales. El texto "Master flores" es provisional: al publicar el archivo logo-master-flores.png junto a la página, el logo oficial lo reemplaza.</p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Physics2DPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MorphSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg", DUR = 60;
+  var MINT = "#27fcaa", GREEN = "#10c47b", ACC = "#20e19e", BLUE = "#0f69f7", NAVY = "#05398c", GRAY = "#575756", WHITE = "#ffffff", SKIN = "#f2f6ff";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  gsap.registerPlugin(SplitText, Physics2DPlugin, MorphSVGPlugin, DrawSVGPlugin, MotionPathPlugin);
+
+  var wrap = $("#wrap"), stage = $("#stage");
+  function fit() { var s = wrap.clientWidth / 540; stage.style.transform = "scale(" + s + ")"; wrap.style.height = (960 * s) + "px"; }
+  fit(); window.addEventListener("resize", fit);
+
+  // The official logo replaces the text lockup when logo-master-flores.png is published next to this page.
+  var probe = new Image();
+  probe.onload = function () { document.querySelectorAll(".lockup").forEach(function (l) { l.classList.add("hasimg"); }); };
+  probe.src = "logo-master-flores.png";
+
+  var tl, cues = [];
+  var cue = function (t, n) { cues.push([Math.round(t * 1000) / 1000, n]); };
+
+  function svgEl(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function person(parent, id, body) {
+    var g = svgEl("g", { id: id }, parent);
+    svgEl("g", { "class": "burden" }, g);
+    svgEl("path", { "class": "pb", d: "M-24 0 Q-30 -46 0 -52 Q30 -46 24 0 Z", fill: body }, g);
+    svgEl("circle", { "class": "ph", cy: -74, r: 21, fill: SKIN }, g);
+    var eyes = svgEl("g", { "class": "eyes", fill: NAVY }, g);
+    svgEl("circle", { cx: -6, cy: -77, r: 2.7 }, eyes); svgEl("circle", { cx: 8, cy: -77, r: 2.7 }, eyes);
+    svgEl("ellipse", { "class": "mouth", cx: 5, cy: -66, rx: 4, ry: 1.3, fill: NAVY }, g);
+    return g;
+  }
+  function pill(parent, txt, fill, col, dir) {
+    var w = Math.round(txt.length * 9.6 + 30), g = svgEl("g", {}, parent);
+    svgEl("rect", { x: 0, y: -15, width: w, height: 30, rx: 15, fill: fill }, g);
+    var t = svgEl("text", { x: w / 2, y: 5.5, "text-anchor": "middle", "font-family": "Poppins, sans-serif", "font-weight": 600, "font-size": 14, fill: col }, g);
+    t.textContent = txt;
+    if (dir > 0) svgEl("path", { d: "M" + w + " -11 L" + (w + 16) + " 0 L" + w + " 11 Z", fill: fill }, g);
+    if (dir < 0) svgEl("path", { d: "M0 -11 L-16 0 L0 11 Z", fill: fill }, g);
+    g.setAttribute("data-w", w);
+    return g;
+  }
+  function bubble(parent, txt, w, fill, col) {
+    var g = svgEl("g", {}, parent);
+    svgEl("rect", { x: -w / 2, y: -24, width: w, height: 48, rx: 24, fill: fill }, g);
+    svgEl("path", { d: "M-18 22 L-26 42 L2 22 Z", fill: fill }, g);
+    var t = svgEl("text", { x: 0, y: 6, "text-anchor": "middle", "font-family": "Poppins, sans-serif", "font-weight": 600, "font-size": 16, fill: col }, g);
+    t.textContent = txt;
+    return g;
+  }
+
+  function build() {
+    tl = gsap.timeline({ paused: true });
+
+    var st = $("#stars"), seed = 7, rnd = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }, starEls = [];
+    for (var i = 0; i < 40; i++) starEls.push(svgEl("circle", { cx: rnd() * 540, cy: 20 + rnd() * 520, r: 0.8 + rnd() * 1.6, fill: "#ffffff" }, st));
+
+    var heroEl = person($("#heroG"), "hero", MINT);
+    var friendEl = person($("#friendG"), "friend", GREEN);
+    var friend2El = person($("#friend2G"), "friend2", WHITE);
+    var HX = 140, HY = 690, HS = 1.6;
+    gsap.set(heroEl, { svgOrigin: "0 0", x: -120, y: HY, scaleX: HS, scaleY: HS });
+    gsap.set(friendEl, { svgOrigin: "0 0", x: 700, y: HY, scaleX: 1.4, scaleY: 1.4 });
+    gsap.set(friend2El, { svgOrigin: "0 0", x: 800, y: HY, scaleX: 1.25, scaleY: 1.25 });
+    var burden = $(".burden", heroEl);
+    var stoneD = "M-14 -6 L-6 -15 L8 -13 L15 -3 L11 10 L-3 15 L-13 9 Z";
+    var spots = [[-40, -66], [-58, -40], [-34, -34], [-52, -14]], stones = [];
+    spots.forEach(function (p, k) {
+      var s = svgEl("path", { d: stoneD, fill: GRAY, stroke: "#3b3b3a", "stroke-width": 2 }, burden);
+      gsap.set(s, { x: p[0], y: p[1], rotation: k * 35 });
+      stones.push(s);
+    });
+    var slots = [[220, 318], [310, 352], [400, 318], [490, 352]], cst = [], glows = [];
+    slots.forEach(function (p) {
+      var g = svgEl("g", { transform: "translate(" + p[0] + " " + p[1] + ")" }, $("#const"));
+      glows.push(svgEl("circle", { r: 26, fill: MINT, opacity: 0 }, g));
+      var sp = svgEl("path", { d: $("#starD").getAttribute("d"), fill: WHITE }, g);
+      gsap.set(sp, { scale: 0 }); cst.push(sp);
+    });
+    gsap.set("#cline", { drawSVG: "0% 0%" });
+    gsap.set("#stairs", { drawSVG: "0%" });
+    gsap.set("#meter", { autoAlpha: 0 });
+    gsap.set("#fin", { autoAlpha: 0 }); gsap.set("#credit", { autoAlpha: 0 }); gsap.set("#endBrand", { autoAlpha: 0 });
+    gsap.set("#brandTop", { autoAlpha: 0 });
+
+    var eyes = function (el) { return $(".eyes", el); }, mouth = function (el) { return $(".mouth", el); };
+    function say(el, t) { tl.to(mouth(el), { attr: { ry: 5 }, duration: 0.12, yoyo: true, repeat: 3, ease: "sine.inOut" }, t); }
+    function hdr(num, label, title, t, out) {
+      var d = document.createElement("div"); d.className = "hdr";
+      d.innerHTML = '<div class="num">' + num + '</div><div><div class="lab">' + label + '</div><div class="ttl">' + title + '</div></div>';
+      $("#hdrs").appendChild(d);
+      gsap.set(d, { autoAlpha: 0 });
+      var sp = SplitText.create($(".ttl", d), { type: "words", mask: "words" });
+      tl.set(d, { autoAlpha: 1 }, t);
+      tl.from($(".num", d), { scale: 0, rotation: -25, duration: 0.7, ease: "back.out(2.4)", transformOrigin: "50% 50%" }, t);
+      tl.from($(".lab", d), { opacity: 0, x: -14, duration: 0.5 }, t + 0.15);
+      tl.from(sp.words, { yPercent: 110, duration: 0.7, ease: "power4.out", stagger: 0.08 }, t + 0.25);
+      tl.to(d, { autoAlpha: 0, y: -14, duration: 0.5 }, out);
+      cue(t, "chapter");
+    }
+    function cap(text, t, out) {
+      var d = document.createElement("div"); d.className = "cap"; d.textContent = text;
+      $("#caps").appendChild(d); gsap.set(d, { autoAlpha: 0 });
+      var sp = SplitText.create(d, { type: "words" });
+      tl.set(d, { autoAlpha: 1 }, t);
+      tl.from(sp.words, { y: 18, opacity: 0, duration: 0.5, ease: "power3.out", stagger: 0.07 }, t);
+      tl.to(d, { autoAlpha: 0, duration: 0.4 }, out);
+    }
+    function freeStone(i, t, slotIdx, hx, hy, hs) {
+      var s = stones[i], tx = (slots[slotIdx][0] - hx) / hs, ty = (slots[slotIdx][1] - hy) / hs;
+      cue(t, "free");
+      tl.to(s, { rotation: "+=18", duration: 0.12, yoyo: true, repeat: 3, ease: "sine.inOut" }, t - 0.1);
+      tl.to(s, { morphSVG: "#starD", fill: WHITE, stroke: MINT, duration: 0.6, ease: "power2.inOut" }, t);
+      tl.to(s, { x: tx, y: ty, rotation: 360, duration: 1.4, ease: "power2.inOut" }, t + 0.3);
+      tl.set(s, { autoAlpha: 0 }, t + 1.7);
+      tl.fromTo(cst[slotIdx], { scale: 0 }, { scale: 1.8, duration: 0.8, ease: "elastic.out(1, 0.45)" }, t + 1.7);
+      tl.to(glows[slotIdx], { opacity: 0.3, duration: 0.8 }, t + 1.7);
+      cue(t + 1.7, "star");
+      if (slotIdx > 0) tl.to("#cline", { drawSVG: "0% " + Math.round(slotIdx * 33.4) + "%", duration: 0.7, ease: "power2.out" }, t + 1.8);
+      tl.to(heroEl, { rotation: [5, 3.4, 1.8, 0][i], duration: 0.9, ease: "power2.out" }, t + 1.2);
+    }
+    function sparkle(x, y, t, n, colors) {
+      var gp = $("#fx");
+      for (var k = 0; k < n; k++) {
+        var c = svgEl("circle", { r: 3 + (k % 3), fill: colors[k % colors.length], cx: 0, cy: 0 }, gp);
+        gsap.set(c, { x: x, y: y, opacity: 0 });
+        tl.set(c, { opacity: 1 }, t);
+        tl.to(c, { duration: 1.1, ease: "none", physics2D: { velocity: 170 + (k * 37) % 120, angle: -90 + ((k * 53) % 13 - 6) * 18, gravity: 420 } }, t);
+        tl.to(c, { opacity: 0, duration: 0.4 }, t + 0.7);
+      }
+    }
+    function ripple(x, y, t) {
+      var r = svgEl("circle", { cx: x, cy: y, r: 10, fill: "none", stroke: MINT, "stroke-width": 4 }, $("#fx"));
+      gsap.set(r, { opacity: 0, transformOrigin: "50% 50%" });
+      tl.fromTo(r, { scale: 0.4, opacity: 1 }, { scale: 4, opacity: 0, duration: 0.7, ease: "power2.out", immediateRender: false }, t);
+    }
+    function walk(el, t0, t1, x1, name) {
+      tl.to(el, { x: x1, duration: t1 - t0, ease: "none" }, t0);
+      var n = Math.round((t1 - t0) / 0.3);
+      tl.to(el, { y: "-=9", duration: 0.15, yoyo: true, repeat: n * 2 - 1, ease: "sine.out" }, t0);
+      for (var k = 0; k < n; k++) cue(t0 + 0.3 * k + 0.15, name || "step");
+    }
+
+    tl.fromTo("#bar i", { scaleX: 0 }, { scaleX: 1, duration: DUR, ease: "none" }, 0);
+    tl.to(["#arc1", "#arc2", "#arc3"], { rotation: "+=25", duration: DUR, ease: "none", transformOrigin: "50% 50%" }, 0);
+
+    // ============ PRÓLOGO 0-7 ============
+    tl.from(starEls, { opacity: 0, duration: 1, stagger: { amount: 1.5, from: "random" } }, 0);
+    tl.to(starEls, { opacity: 0.25, duration: 1.4, yoyo: true, repeat: 38, ease: "sine.inOut", stagger: { amount: 1.6, from: "random" } }, 1.2);
+    var t1 = SplitText.create("#t1", { type: "words", mask: "words" });
+    tl.from("#lk1", { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" }, 0.1);
+    tl.from(t1.words, { yPercent: 115, duration: 0.9, ease: "power4.out", stagger: 0.12 }, 0.5);
+    tl.from("#t2", { opacity: 0, y: 12, duration: 0.7 }, 1.4);
+    tl.to("#title", { autoAlpha: 0, y: -20, duration: 0.5 }, 2.4);
+    tl.to("#brandTop", { autoAlpha: 1, duration: 0.6 }, 2.6);
+    cue(0.3, "title");
+    cap("Había una vez una persona…", 2.7, 4.5);
+    walk(heroEl, 2.7, 5.4, HX, "step");
+    [3.2, 3.55, 3.9, 4.25].forEach(function (t, k) {
+      tl.from(stones[k], { y: -430, rotation: -120, duration: 0.7, ease: "bounce.out" }, t);
+      cue(t + 0.24, "thud");
+      tl.to(heroEl, { scaleY: HS * 0.93, duration: 0.1, yoyo: true, repeat: 1, ease: "power2.out" }, t + 0.24);
+    });
+    tl.to(heroEl, { rotation: 5, duration: 1.0, ease: "power2.out" }, 4.3);
+    cap("…que cargaba cuatro piedras invisibles.", 4.7, 6.8);
+    tl.to(heroEl, { scaleY: HS * 0.96, duration: 0.5, yoyo: true, repeat: 1, ease: "sine.inOut" }, 5.7);
+    cue(5.75, "sigh");
+
+    // ============ ACUERDO 1: 7-20 ============
+    tl.to("#sky1", { opacity: 1, duration: 1.6 }, 7.0);
+    hdr("1", "PRIMER ACUERDO", "Sé impecable con tus palabras", 7.1, 19.4);
+    walk(friendEl, 7.6, 9.1, 400, "step2");
+    cap("Una palabra puede herir como una flecha…", 8.2, 11.6);
+    var dart = pill($("#fx"), "TORPE", GRAY, WHITE, 1);
+    var dw = +dart.getAttribute("data-w");
+    gsap.set(dart, { x: 180, y: 590, autoAlpha: 0 });
+    say(heroEl, 9.4);
+    cue(9.5, "word_dart");
+    tl.set(dart, { autoAlpha: 1 }, 9.5);
+    tl.fromTo(dart, { x: 180, y: 590 }, { x: 362 - dw - 16, y: 640, duration: 0.7, ease: "power2.in" }, 9.5);
+    cue(10.2, "dart_hit");
+    tl.to(friendEl, { rotation: 7, scaleY: 1.27, duration: 0.25, ease: "power3.out" }, 10.2);
+    tl.to($(".pb", friendEl), { fill: GRAY, duration: 0.3 }, 10.2);
+    tl.to($(".ph", friendEl), { y: 5, duration: 0.3 }, 10.2);
+    tl.to(dart, { y: "+=60", rotation: 40, autoAlpha: 0, duration: 0.6, ease: "power2.in" }, 10.35);
+    cap("…o volar como un pájaro.", 11.8, 15.4);
+    var bird = svgEl("g", {}, $("#fx")), bw = [];
+    svgEl("ellipse", { rx: 13, ry: 8, fill: MINT }, bird);
+    bw.push(svgEl("path", { d: "M0 -3 Q-6 -28 -30 -20 Q-14 -10 0 -3 Z", fill: WHITE }, bird));
+    bw.push(svgEl("path", { d: "M0 -3 Q6 -28 30 -20 Q14 -10 0 -3 Z", fill: WHITE }, bird));
+    var gp = pill(bird, "GRACIAS", MINT, NAVY, 0); gsap.set(gp, { x: -48, y: 28 });
+    gsap.set(bird, { x: 165, y: 590, autoAlpha: 0 });
+    say(heroEl, 12.0);
+    cue(12.1, "bird_launch");
+    tl.set(bird, { autoAlpha: 1 }, 12.1);
+    tl.to(bird, { motionPath: { path: [{ x: 165, y: 590 }, { x: 240, y: 470 }, { x: 320, y: 450 }, { x: 396, y: 575 }], curviness: 1.4 }, duration: 1.5, ease: "power1.inOut" }, 12.1);
+    tl.to(bw, { scaleY: 0.35, svgOrigin: "0 -3", duration: 0.12, yoyo: true, repeat: 11, ease: "sine.inOut" }, 12.1);
+    cue(13.6, "bird_land");
+    tl.to(bird, { autoAlpha: 0, duration: 0.3 }, 13.7);
+    tl.to(friendEl, { rotation: 0, scaleY: 1.4, duration: 0.5, ease: "elastic.out(1, 0.5)" }, 13.65);
+    tl.to($(".pb", friendEl), { fill: GREEN, duration: 0.4 }, 13.65);
+    tl.to($(".ph", friendEl), { y: 0, duration: 0.4 }, 13.65);
+    sparkle(400, 630, 13.65, 10, [MINT, WHITE, ACC]);
+    freeStone(0, 14.3, 0, HX, HY, HS);
+    cap("Habla con verdad y con amor: tus palabras crean tu mundo.", 15.7, 19.3);
+    walk(friendEl, 18.6, 19.7, 700, "step2");
+
+    // ============ ACUERDO 2: 20-33 ============
+    hdr("2", "SEGUNDO ACUERDO", "No te tomes nada personalmente", 20.1, 32.5);
+    cap("A veces los demás lanzan flechas…", 20.8, 24.2);
+    var shield = svgEl("circle", { cx: 0, cy: 0, r: 105, fill: "#27fcaa22", stroke: MINT, "stroke-width": 4 }, $("#fx"));
+    gsap.set(shield, { x: 150, y: 620, scale: 0, transformOrigin: "50% 50%", opacity: 1 });
+    cue(21.5, "shield");
+    tl.to(shield, { scale: 1, duration: 0.9, ease: "elastic.out(1, 0.5)" }, 21.5);
+    tl.to(shield, { scale: 1.04, duration: 1.1, yoyo: true, repeat: 7, ease: "sine.inOut" }, 22.5);
+    tl.to(eyes(heroEl), { scaleY: 0.12, svgOrigin: "0 -77", duration: 0.2 }, 21.6);
+    var words = ["ERES RARO", "NO LO LOGRARÁS", "QUÉ EXAGERADO", "NO SIRVES"], hy = [565, 615, 655, 590];
+    words.forEach(function (w, k) {
+      var a = pill($("#fx"), w, GRAY, WHITE, -1), t = 22.2 + k * 1.2;
+      gsap.set(a, { x: 640, y: hy[k], autoAlpha: 0 });
+      cue(t, "arrow");
+      tl.set(a, { autoAlpha: 1 }, t);
+      var hitx = 150 + Math.sqrt(105 * 105 - Math.pow(hy[k] - 620, 2)) + 4;
+      tl.to(a, { x: hitx + 16, duration: 0.85, ease: "power1.in" }, t);
+      cue(t + 0.85, "shield_hit");
+      ripple(hitx, hy[k], t + 0.85);
+      tl.to(shield, { scale: 1.08, duration: 0.1, yoyo: true, repeat: 1 }, t + 0.85);
+      tl.to(a, { duration: 1.2, ease: "none", rotation: 220 - k * 60, physics2D: { velocity: 520, angle: -55 - k * 12, gravity: 1100 } }, t + 0.85);
+      tl.to(a, { autoAlpha: 0, duration: 0.3 }, t + 1.7);
+    });
+    cap("…pero lo que dicen habla de su mundo, no del tuyo.", 24.9, 28.6);
+    freeStone(1, 28.8, 1, HX, HY, HS);
+    cap("Tú no eres lo que opinan. Respira.", 30.2, 32.3);
+    tl.to(shield, { scale: 0, opacity: 0, duration: 0.6, ease: "back.in(2)" }, 31.2);
+    tl.to(eyes(heroEl), { scaleY: 1, svgOrigin: "0 -77", duration: 0.2 }, 31.6);
+
+    // ============ ACUERDO 3: 33-46 ============
+    hdr("3", "TERCER ACUERDO", "No hagas suposiciones", 33.1, 45.4);
+    walk(friendEl, 33.6, 34.7, 330, "step2");
+    walk(friend2El, 33.6, 34.7, 440, "step2");
+    cap("Dos personas susurran, y tu mente imagina lo peor…", 34.4, 38.0);
+    var whisper = svgEl("text", { x: 385, y: 545, "text-anchor": "middle", "font-family": "Poppins, sans-serif", "font-weight": 800, "font-size": 30, fill: WHITE, opacity: 0 }, $("#fx"));
+    whisper.textContent = "· · ·";
+    tl.to(whisper, { opacity: 1, duration: 0.4 }, 34.9);
+    tl.to(whisper, { y: -6, duration: 0.5, yoyo: true, repeat: 5, ease: "sine.inOut" }, 34.9);
+    tl.to(whisper, { opacity: 0, duration: 0.4 }, 38.3);
+    tl.to(friendEl, { rotation: 5, duration: 0.4 }, 34.9);
+    tl.to(friend2El, { rotation: -5, duration: 0.4 }, 34.9);
+    cue(34.9, "whisper");
+    var cloud = svgEl("g", {}, $("#fx"));
+    var cp = svgEl("path", { d: "M-60 22 C-92 22 -92 -20 -56 -20 C-56 -56 -4 -62 16 -36 C36 -62 86 -46 80 -10 C112 -10 112 30 76 30 Z", fill: GRAY, stroke: "#3b3b3a", "stroke-width": 3 }, cloud);
+    var ctxt = svgEl("text", { x: 4, y: -6, "text-anchor": "middle", "font-family": "Poppins, sans-serif", "font-weight": 600, "font-size": 14, fill: WHITE }, cloud);
+    ctxt.textContent = "¿HABLAN DE MÍ?";
+    var bolt = svgEl("path", { d: "M10 8 L-4 26 L8 26 L-6 46", fill: "none", stroke: MINT, "stroke-width": 4, "stroke-linecap": "round", "stroke-linejoin": "round" }, cloud);
+    gsap.set(cloud, { x: 150, y: 450, scale: 0, transformOrigin: "50% 50%" });
+    gsap.set(bolt, { drawSVG: "0%" });
+    var dots = [svgEl("circle", { cx: 158, cy: 528, r: 6, fill: GRAY }, $("#fx")), svgEl("circle", { cx: 150, cy: 512, r: 9, fill: GRAY }, $("#fx"))];
+    gsap.set(dots, { opacity: 0 });
+    tl.to(dots, { opacity: 1, duration: 0.3, stagger: 0.2 }, 35.2);
+    cue(35.4, "cloud");
+    tl.to(cloud, { scale: 1.1, duration: 0.8, ease: "elastic.out(1, 0.5)" }, 35.5);
+    tl.to(cp, { fill: "#3b3b3a", duration: 0.5 }, 36.0);
+    cue(36.2, "thunder");
+    tl.to(bolt, { drawSVG: "100%", duration: 0.25, ease: "power2.in" }, 36.2);
+    tl.to(cloud, { x: "+=6", duration: 0.05, yoyo: true, repeat: 7 }, 36.2);
+    tl.to("#sky1", { opacity: 0.6, duration: 0.06, yoyo: true, repeat: 3 }, 36.2);
+    cap("Pero una suposición no es un hecho. Pregunta.", 38.2, 42.0);
+    var q = bubble($("#fx"), "¿QUÉ PASA?", 150, WHITE, NAVY);
+    gsap.set(q, { x: 255, y: 505, scale: 0, transformOrigin: "-18px 40px" });
+    say(heroEl, 38.8);
+    cue(38.8, "ask");
+    tl.to(q, { scale: 1, duration: 0.5, ease: "back.out(2.5)" }, 38.8);
+    tl.to(q, { scale: 0, duration: 0.3 }, 40.4);
+    var rep = bubble($("#fx"), "¡UNA SORPRESA PARA TI!", 290, MINT, NAVY);
+    gsap.set(rep, { x: 385, y: 515, scale: 0, transformOrigin: "-18px 40px" });
+    cue(40.2, "reply");
+    tl.to(rep, { scale: 1, duration: 0.5, ease: "back.out(2.5)" }, 40.2);
+    tl.to(rep, { scale: 0, duration: 0.3 }, 43.4);
+    tl.to([friendEl, friend2El], { rotation: 0, duration: 0.3 }, 40.2);
+    cue(40.5, "confetti");
+    var conf = [MINT, GREEN, WHITE, ACC, BLUE];
+    for (var k = 0; k < 18; k++) {
+      var r = svgEl("rect", { width: 9, height: 6, fill: conf[k % 5] }, $("#fx"));
+      gsap.set(r, { x: 385, y: 600, opacity: 0 });
+      tl.set(r, { opacity: 1 }, 40.5);
+      tl.to(r, { duration: 1.6, ease: "none", rotation: 360 + k * 20, physics2D: { velocity: 240 + (k * 41) % 200, angle: -90 + ((k * 29) % 15 - 7) * 10, gravity: 520 } }, 40.5);
+      tl.to(r, { opacity: 0, duration: 0.4 }, 41.8);
+    }
+    tl.to(ctxt, { opacity: 0, duration: 0.3 }, 40.4);
+    tl.to(bolt, { opacity: 0, duration: 0.2 }, 40.4);
+    cue(40.6, "sun");
+    tl.to(cp, { morphSVG: "#sunD", fill: MINT, stroke: WHITE, duration: 0.8, ease: "power2.inOut" }, 40.5);
+    tl.to(cloud, { scale: 1.2, duration: 0.8 }, 40.5);
+    freeStone(2, 41.5, 2, HX, HY, HS);
+    cap("Pregunta, aclara y vive sin dramas.", 42.7, 45.2);
+    tl.to([cloud, dots], { opacity: 0, duration: 0.5 }, 44.2);
+    walk(friendEl, 44.4, 45.4, 700, "step2");
+    walk(friend2El, 44.4, 45.4, 800, "step2");
+
+    // ============ ACUERDO 4: 46-56 ============
+    hdr("4", "CUARTO ACUERDO", "Haz siempre lo máximo que puedas", 46.1, 55.4);
+    tl.to("#sky2", { opacity: 1, duration: 2.2 }, 46.4);
+    tl.to("#sky1", { opacity: 0, duration: 2.2 }, 46.4);
+    tl.to("#stars", { opacity: 0.15, duration: 2 }, 46.4);
+    tl.to("#mtn1", { fill: "#0f69f7", duration: 2.2 }, 46.4);
+    tl.to("#mtn2", { fill: "#194e8e", duration: 2.2 }, 46.4);
+    tl.to(heroEl, { scaleX: 1.15, scaleY: 1.15, duration: 0.8, ease: "power2.inOut" }, 46.2);
+    tl.to("#stairFill", { opacity: 1, duration: 0.8 }, 46.8);
+    cue(46.8, "draw");
+    tl.to("#stairs", { drawSVG: "100%", duration: 1.6, ease: "power1.inOut" }, 46.8);
+    cap("Hay días de mucha energía y días de poca…", 47.0, 50.4);
+    tl.to("#meter", { autoAlpha: 1, duration: 0.5 }, 48.2);
+    tl.to("#sunW", { opacity: 1, duration: 0.5 }, 48.0);
+    tl.fromTo("#sun", { attr: { cy: 760 } }, { attr: { cy: 470 }, duration: 5.2, ease: "power2.out" }, 49.0);
+    var hops = [
+      { x: 215, y: 650, h: 26, pct: 40, t: 48.6 },
+      { x: 275, y: 612, h: 50, pct: 70, t: 49.5 },
+      { x: 335, y: 574, h: 24, pct: 35, t: 50.4 },
+      { x: 395, y: 536, h: 90, pct: 90, t: 51.3 },
+      { x: 465, y: 498, h: 56, pct: 65, t: 52.3 }
+    ];
+    var pv = $("#mval"), pf = $("#mfill"), pr = { v: 40 };
+    hops.forEach(function (h, k) {
+      var d = k === 4 ? 0.7 : 0.6;
+      cue(h.t, "hop");
+      tl.to(heroEl, { x: h.x, duration: d, ease: "none" }, h.t);
+      tl.to(heroEl, { y: h.y - h.h, duration: d / 2, ease: "power2.out" }, h.t);
+      tl.to(heroEl, { y: h.y, duration: d / 2, ease: "power2.in" }, h.t + d / 2);
+      tl.to(heroEl, { scaleY: 1.15 * 0.88, duration: 0.08, yoyo: true, repeat: 1 }, h.t + d);
+      cue(h.t + d, "land");
+      tl.to(pr, { v: h.pct, duration: 0.5, ease: "power2.out", onUpdate: function () { pv.textContent = Math.round(pr.v) + " %"; pf.style.width = pr.v + "%"; } }, h.t);
+    });
+    cap("Hoy puede ser el 40 %, mañana el 90 %. Haz lo máximo que puedas hoy, sin juzgarte.", 50.7, 55.2);
+    freeStone(3, 53.2, 3, 465, 498, 1.15);
+    tl.to(eyes(heroEl), { scaleY: 1, duration: 0.01 }, 53);
+    tl.to(heroEl, { scaleY: 1.15, rotation: 0, duration: 0.4 }, 54.8);
+
+    // ============ FINAL 55.4-60 ============
+    tl.to("#meter", { autoAlpha: 0, duration: 0.4 }, 55.2);
+    cue(55.8, "gather");
+    tl.to("#const", { x: -85, y: -30, scaleX: 1.25, scaleY: 1.25, svgOrigin: "355 335", duration: 1.3, ease: "power3.inOut" }, 55.8);
+    tl.to("#cline", { drawSVG: "0% 100%", duration: 0.5 }, 56.0);
+    tl.set("#fin", { autoAlpha: 1 }, 56.3);
+    var f1 = SplitText.create("#f1", { type: "words", mask: "words" }), f2 = SplitText.create("#f2", { type: "words", mask: "words" });
+    tl.from(f1.words, { yPercent: 115, duration: 0.8, ease: "power4.out", stagger: 0.1 }, 56.4);
+    tl.from(f2.words, { yPercent: 115, duration: 0.8, ease: "power4.out", stagger: 0.1 }, 57.3);
+    cue(56.5, "final1"); cue(57.4, "final2");
+    tl.to(heroEl, { y: "-=46", duration: 0.35, yoyo: true, repeat: 1, ease: "power2.out" }, 57.2);
+    cue(57.6, "land");
+    tl.to(mouth(heroEl), { attr: { ry: 4.5, rx: 6 }, duration: 0.3 }, 57.2);
+    tl.set("#endBrand", { autoAlpha: 1 }, 58.0);
+    tl.fromTo("#endBrand", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, immediateRender: false }, 58.0);
+    tl.set("#credit", { autoAlpha: 1 }, 58.5);
+    tl.fromTo("#credit", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, immediateRender: false }, 58.5);
+    tl.set({}, {}, DUR);
+    window.__cues = cues;
+    return tl;
+  }
+
+  var scrub = $("#scrub"), time = $("#time"), play = $("#play");
+  function sync() {
+    scrub.value = Math.round((tl.time() / DUR) * 1000);
+    time.textContent = tl.time().toFixed(1) + " / " + DUR.toFixed(1) + " s";
+    play.textContent = tl.paused() ? (tl.progress() === 1 ? "Repetir" : "Reproducir") : "Pausa";
+  }
+  var items = [
+    [0, "Prólogo", "Una persona que carga cuatro piedras invisibles."],
+    [7, "Acuerdo 1", "Sé impecable con tus palabras: una flecha y un pájaro."],
+    [20, "Acuerdo 2", "No te tomes nada personalmente: el escudo."],
+    [33, "Acuerdo 3", "No hagas suposiciones: una nube que se vuelve sol."],
+    [46, "Acuerdo 4", "Haz siempre lo máximo que puedas: la escalera."],
+    [56, "Final", "Cuatro estrellas y una vida más ligera."]
+  ];
+  var idx = $("#index");
+  items.forEach(function (it) {
+    var li = document.createElement("li"), b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = '<span class="t">' + String(it[0]).padStart(2, "0") + ' s</span><b>' + it[1] + '</b><small>' + it[2] + '</small>';
+    b.addEventListener("click", function () { if (!tl) return; tl.pause(); tl.time(it[0] + 0.05); tl.play(); sync(); });
+    li.appendChild(b); idx.appendChild(li);
+  });
+
+  var started = false;
+  function start() {
+    if (started) return; started = true;
+    build();
+    tl.eventCallback("onUpdate", sync); tl.eventCallback("onComplete", sync);
+    play.addEventListener("click", function () { if (tl.progress() === 1) tl.restart(); else if (tl.paused()) tl.play(); else tl.pause(); sync(); });
+    $("#replay").addEventListener("click", function () { tl.restart(); sync(); });
+    scrub.addEventListener("input", function () { tl.pause(); tl.time((scrub.value / 1000) * DUR); sync(); });
+    window.__tl = tl;
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { tl.progress(1).pause(); } else { tl.play(); }
+    sync();
+  }
+  var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  Promise.race([fontsReady, new Promise(function (r) { setTimeout(r, 2500); })]).then(start);
+})();
+</script>

@@ -485,7 +485,7 @@
     cue(57.6, "land");
     tl.to(mouth(heroEl), { attr: { ry: 4.5, rx: 6 }, duration: 0.3 }, 57.2);
     tl.set("#credit", { autoAlpha: 1 }, 58.4);
-    tl.from("#credit", { y: 14, opacity: 0, duration: 0.6 }, 58.4);
+    tl.fromTo("#credit", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, immediateRender: false }, 58.4);
     tl.set({}, {}, DUR);
     window.__cues = cues;
     return tl;
