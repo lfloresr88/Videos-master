@@ -7,9 +7,11 @@ export type Layout = {
   sigTop: number;
   sigLeft: number;
   dots: {top: number; right: number; size: number; gap: number};
-  titleScale: number;
+  /** Escala tipográfica del contenido */
+  k: number;
 };
 
+/** Adapta la composición horizontal (16:9) o vertical (9:16) según el tamaño del video. */
 export function getLayout(width: number, height: number): Layout {
   const vertical = height > width;
   if (!vertical) {
@@ -18,24 +20,24 @@ export function getLayout(width: number, height: number): Layout {
       vertical,
       avatarW,
       avatarLeft: 0,
-      content: {left: 760, top: 200, width: 1080, height: 560},
-      subs: {left: avatarW + 50, width: width - avatarW - 50 - 70, bottom: 44, font: 40},
+      content: {left: 760, top: 180, width: 1090, height: 650},
+      subs: {left: avatarW + 50, width: width - avatarW - 50 - 70, bottom: 44, font: 38},
       sigTop: 50,
       sigLeft: 64,
       dots: {top: 60, right: 64, size: 58, gap: 12},
-      titleScale: 1,
+      k: 1,
     };
   }
-  const avatarW = 580;
+  const avatarW = 560;
   return {
     vertical,
     avatarW,
     avatarLeft: (width - avatarW) / 2 - 20,
-    content: {left: 70, top: 290, width: 940, height: 640},
-    subs: {left: 60, width: width - 120, bottom: 770, font: 38},
+    content: {left: 70, top: 215, width: 940, height: 725},
+    subs: {left: 50, width: width - 100, bottom: 725, font: 34},
     sigTop: 56,
     sigLeft: 56,
     dots: {top: 70, right: 46, size: 50, gap: 8},
-    titleScale: 0.82,
+    k: 0.92,
   };
 }

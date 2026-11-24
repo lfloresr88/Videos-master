@@ -1,6 +1,6 @@
 import React from 'react';
 import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {C, POPPINS, W} from './theme';
+import {C, POPPINS, W} from './brand';
 
 const SKIN = '#F0B98D';
 const SKIN_SHADE = '#D99B6E';
@@ -77,10 +77,10 @@ export const Avatar: React.FC<AvatarProps> = ({width, local, sceneDuration, bubb
           <path d="M138 338 L200 438 L262 338 Q200 322 138 338 Z" fill={C.white} />
           <path d="M170 334 L200 392 L230 334 Q200 326 170 334 Z" fill={SKIN} />
           {/* Insignia */}
-          <circle cx={296} cy={452} r={28} fill={C.mint} />
+          <circle cx={118} cy={470} r={28} fill={C.mint} />
           <text
-            x={296}
-            y={462}
+            x={118}
+            y={480}
             textAnchor="middle"
             fontFamily={POPPINS}
             fontWeight={W.extra}
@@ -151,6 +151,7 @@ export const Avatar: React.FC<AvatarProps> = ({width, local, sceneDuration, bubb
             lineHeight: 1.2,
             padding: `${fs * 0.55}px ${fs * 0.85}px`,
             borderRadius: fs * 1.1,
+            width: 'max-content',
             maxWidth: width * 0.62,
             minWidth: width * 0.3,
             boxShadow: '0 10px 30px rgba(4,42,102,0.35)',

@@ -1,23 +1,24 @@
 import React from 'react';
-import {AbsoluteFill, Sequence, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {Background, FloatingQuestions, ProgressBar} from './Background';
 import {Avatar} from './Avatar';
-import {Content} from './Content';
-import {Subtitles} from './Subtitles';
+import {SceneBody, Subtitles} from './SceneBodies';
 import {QuestionDots, Signature} from './Hud';
-import {SCENES, SCENE_STARTS, sceneAt} from './data';
+import {DURATIONS, SCENES, SCENE_STARTS, sceneAt} from './scenes';
+import {MUSIC_VOLUME, VOICE_FILE} from './brand';
 import {useSceneFade} from './anim';
 import {getLayout} from './layout';
 
+/** Contenido de una escena: entra escalonado y se desvanece en los últimos 0.4 s. */
 const SceneLayer: React.FC<{i: number}> = ({i}) => {
   const {width, height} = useVideoConfig();
   const layout = getLayout(width, height);
   const scene = SCENES[i];
-  const opacity = useSceneFade(scene.durationInFrames);
+  const opacity = useSceneFade(DURATIONS[i]);
   return (
     <AbsoluteFill style={{opacity}}>
-      <Content scene={scene} layout={layout} />
-      <Subtitles text={scene.narration} sceneDuration={scene.durationInFrames} layout={layout} />
+      <SceneBody scene={scene} layout={layout} />
+      <Subtitles text={scene.narration} sceneDuration={DURATIONS[i]} layout={layout} />
     </AbsoluteFill>
   );
 };
@@ -26,21 +27,24 @@ export const CoachingHabit: React.FC = () => {
   const frame = useCurrentFrame();
   const {width, height} = useVideoConfig();
   const layout = getLayout(width, height);
-  const {local, scene} = sceneAt(frame);
+  const {local, scene, duration} = sceneAt(frame);
 
   return (
     <AbsoluteFill>
+      <Audio src={staticFile('music.mp3')} volume={MUSIC_VOLUME} />
+      {VOICE_FILE && <Audio src={staticFile(VOICE_FILE)} />}
+
       <Background />
       <FloatingQuestions />
 
-      {SCENES.map((s, i) => (
-        <Sequence key={i} from={SCENE_STARTS[i]} durationInFrames={s.durationInFrames}>
+      {SCENES.map((_s, i) => (
+        <Sequence key={i} from={SCENE_STARTS[i]} durationInFrames={DURATIONS[i]}>
           <SceneLayer i={i} />
         </Sequence>
       ))}
 
       <div style={{position: 'absolute', left: layout.avatarLeft, bottom: 0}}>
-        <Avatar width={layout.avatarW} local={local} sceneDuration={scene.durationInFrames} bubble={scene.bubble} />
+        <Avatar width={layout.avatarW} local={local} sceneDuration={duration} bubble={scene.bubble} />
       </div>
 
       <div style={{position: 'absolute', top: layout.sigTop, left: layout.sigLeft}}>

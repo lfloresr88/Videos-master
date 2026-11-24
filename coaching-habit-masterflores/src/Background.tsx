@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {C, POPPINS, W} from './theme';
-import {sceneAt, SCENES} from './data';
+import {C, POPPINS, W} from './brand';
+import {sceneAt} from './scenes';
 
 const angleFor = (i: number, phase: number) => (((i + phase) % 3) - 1) * 22;
 const scaleFor = (i: number, phase: number) => 1 + 0.07 * ((i + phase) % 2);
@@ -127,4 +127,3 @@ export const ProgressBar: React.FC = () => {
   );
 };
 
-export const SCENE_COUNT = SCENES.length;

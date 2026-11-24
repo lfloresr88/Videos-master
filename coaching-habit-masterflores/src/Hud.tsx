@@ -1,7 +1,7 @@
 import React from 'react';
 import {spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {C, POPPINS, W} from './theme';
-import {sceneAt} from './data';
+import {C, POPPINS, W} from './brand';
+import {questionProgress, sceneAt} from './scenes';
 import {useEnter} from './anim';
 
 /** Firma en texto (sin isotipo). */
@@ -26,12 +26,12 @@ export const QuestionDots: React.FC<{size?: number; gap?: number}> = ({size = 58
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const {index, local} = sceneAt(frame);
-  const current = index - 1; // 0..6 durante las preguntas; -1 intro; 7 outro
+  const {current, seen: seenCount} = questionProgress(index);
   return (
     <div style={{display: 'flex', gap, alignItems: 'center'}}>
       {Array.from({length: 7}, (_, i) => {
         const isCurrent = i === current;
-        const seen = i < current;
+        const seen = i < seenCount;
         const enter = spring({frame: frame - i * 4, fps, config: {damping: 200}});
         const grow = isCurrent ? spring({frame: local, fps, config: {damping: 12, stiffness: 140}}) : 0;
         const pulse = isCurrent ? 0.5 + 0.5 * Math.sin(frame / 8) : 0;

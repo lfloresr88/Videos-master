@@ -22,3 +22,8 @@ export const FPS = 30;
 export const TOTAL_FRAMES = 120 * FPS;
 
 export const W = {regular: 400, medium: 500, semi: 600, extra: 800} as const;
+
+/** Ruta (dentro de public/) de la voz narrada, por ejemplo 'voz.mp3'. Con null solo suena la música. */
+export const VOICE_FILE: string | null = null;
+/** Volumen de la música: baja a 0.35 cuando hay voz. */
+export const MUSIC_VOLUME = VOICE_FILE ? 0.35 : 1;
